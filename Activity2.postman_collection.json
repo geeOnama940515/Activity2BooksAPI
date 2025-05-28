@@ -1,0 +1,380 @@
+{
+	"info": {
+		"_postman_id": "024562da-409a-4673-bc47-96bafbade9f5",
+		"name": "Activity2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27867740"
+	},
+	"item": [
+		{
+			"name": "Authors",
+			"item": [
+				{
+					"name": "GetAuthors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/Authors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAuthorsById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5067/api/Authors/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchAuthor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/Authors/search/?name=Rowling",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Rowling"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksWrittenByAuthor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/Authors/1/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors",
+								"1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Author",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"Gregorio\",\r\n  \"lastName\": \"Amano III\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5067/api/Authors/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Author",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"Greg Test Update\",\r\n  \"lastName\": \"Update is Working\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5067/api/Authors/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAuthor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/Authors/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Authors",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "GetBooks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/Books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5067/api/Books/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Books",
+								"4"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchBook",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/Books/search/?title=Harry",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Books",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Harry"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"This is a tset book\",\r\n  \"description\": \"Test Book11\",\r\n  \"authorIds\": [\r\n    1\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5067/api/Books/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBook",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 4,\r\n  \"title\": \"Test if Working\",\r\n  \"description\": \"Working\",\r\n  \"authorIds\": [\r\n    1,\r\n    2\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5067/api/Books/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"Books",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBook",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5067/api/books/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5067",
+							"path": [
+								"api",
+								"books",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

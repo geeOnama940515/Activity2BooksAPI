@@ -1,0 +1,5 @@
+1. Open Command prompt in this folder
+2. Run command cd Activity2BooksAPI
+3. Run command dotnet watch
+4. Open browser
+5. Access API Documentation : http://localhost:5067/scalar

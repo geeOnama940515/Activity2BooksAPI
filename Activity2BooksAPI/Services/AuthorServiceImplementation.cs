@@ -12,9 +12,25 @@ namespace Activity2BooksAPI.Services
         public AuthorServiceImplementation()
         {
             // Seed authors
-            Add(new Author { FirstName = "George",LastName = "Orwell" });
-            Add(new Author { FirstName = "J.K.", LastName = "Rowling"});
-            Add(new Author { FirstName = "J.R.R." , LastName = "Tolkien" });
+            var orwell = Add(new Author { FirstName = "George", LastName = "Orwell" });
+            orwell.Books = new List<Book>
+            {
+                new Book { Id = 1, Title = "1984", Description = "Dystopian novel" },
+                new Book { Id = 2, Title = "Animal Farm", Description = "Political allegory" }
+            };
+
+            var rowling = Add(new Author { FirstName = "J.K.", LastName = "Rowling" });
+            rowling.Books = new List<Book>
+            {
+                new Book { Id = 3, Title = "Harry Potter and the Philosopher's Stone", Description = "First Harry Potter book" }
+            };
+
+            var tolkien = Add(new Author { FirstName = "J.R.R.", LastName = "Tolkien" });
+            tolkien.Books = new List<Book>
+            {
+                new Book { Id = 4, Title = "The Hobbit", Description = "Adventure in Middle-earth" },
+                new Book { Id = 5, Title = "The Lord of the Rings", Description = "Epic fantasy" }
+            };
         }
 
         public List<Author> GetAll() => _authors;
@@ -42,6 +58,20 @@ namespace Activity2BooksAPI.Services
         {
             var author = GetById(id);
             return author != null && _authors.Remove(author);
+        }
+
+        public List<Author> SearchByName(string name)
+        {
+            return _authors
+              .Where(a => $"{a.FirstName} {a.LastName}".Contains(name, StringComparison.OrdinalIgnoreCase))
+              .ToList();
+        }
+
+        public List<Book> GetBooksByAuthorId(int authorId)
+        {
+            var author = GetById(authorId);
+
+            return author?.Books ?? new List<Book>();
         }
     }
 }

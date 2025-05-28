@@ -54,5 +54,12 @@ namespace Activity2BooksAPI.Services
             var book = GetById(id);
             return book != null && _books.Remove(book);
         }
+
+        public List<Book> SearchByTitle(string title)
+        {
+            return _books
+            .Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        }
     }
 }

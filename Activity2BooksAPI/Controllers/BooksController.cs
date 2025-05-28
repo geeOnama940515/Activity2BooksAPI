@@ -10,23 +10,28 @@ namespace Activity2BooksAPI.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly IAuthorService _authorService;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService, IAuthorService authorService)
         {
             _bookService = bookService;
+            _authorService = authorService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<BookDTO>> GetAll()
+        public ActionResult<IEnumerable<BookDetailsDTO>> GetAll()
         {
             try
             {
                 var books = _bookService.GetAll()
-                    .Select(book => new BookDTO
+                    .Select(book => new BookDetailsDTO
                     {
                         Id = book.Id,
                         Title = book.Title,
-                        Description = book.Description
+                        Description = book.Description,
+                        AuthorNames = book.Authors?
+                            .Select(a => $"{a.FirstName} {a.LastName}")
+                            .ToList() ?? new List<string>()
                     });
 
                 return Ok(books);
@@ -38,18 +43,21 @@ namespace Activity2BooksAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<BookDTO> Get(int id)
+        public ActionResult<BookDetailsDTO> Get(int id)
         {
             try
             {
                 var book = _bookService.GetById(id);
                 if (book == null) return NotFound("Book not found");
 
-                var dto = new BookDTO
+                var dto = new BookDetailsDTO
                 {
                     Id = book.Id,
                     Title = book.Title,
-                    Description = book.Description
+                    Description = book.Description,
+                    AuthorNames = book.Authors?
+                            .Select(a => $"{a.FirstName} {a.LastName}") //Projection
+                            .ToList() ?? new List<string>()
                 };
 
                 return Ok(dto);
@@ -59,16 +67,45 @@ namespace Activity2BooksAPI.Controllers
                 return StatusCode(500, $"Error retrieving book: {ex.Message}");
             }
         }
+        [HttpGet("search")]
+        public ActionResult<IEnumerable<BookDetailsDTO>> SearchByTitle([FromQuery] string title)
+        {
+            try
+            {
+                var books = _bookService.SearchByTitle(title)
+                    .Select(book => new BookDetailsDTO
+                    {
+                        Id = book.Id,
+                        Title = book.Title,
+                        Description = book.Description,
+                        AuthorNames = book.Authors?
+                                    .Select(a => $"{a.FirstName} {a.LastName}")
+                                    .ToList() ?? new List<string>()
+                    });
+
+                return Ok(books);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error searching books: {ex.Message}");
+            }
+        }
+
 
         [HttpPost]
         public IActionResult Create(BookDTO bookDTO)
         {
             try
             {
+                var authors = _authorService.GetAll()
+                    .Where(a => bookDTO.AuthorIds.Contains(a.Id))
+                    .ToList();
+
                 var book = new Book
                 {
                     Title = bookDTO.Title,
-                    Description = bookDTO.Description
+                    Description = bookDTO.Description,
+                    Authors = authors
                 };
 
                 var created = _bookService.Add(book);
@@ -77,7 +114,8 @@ namespace Activity2BooksAPI.Controllers
                 {
                     Id = created.Id,
                     Title = created.Title,
-                    Description = created.Description
+                    Description = created.Description,
+                    AuthorIds = created.Authors?.Select(a => a.Id).ToList() ?? new List<int>()
                 };
 
                 return CreatedAtAction(nameof(Get), new { id = created.Id }, createdDTO);
@@ -93,10 +131,16 @@ namespace Activity2BooksAPI.Controllers
         {
             try
             {
+                var authors = _authorService.GetAll()
+                    .Where(a => bookDTO.AuthorIds.Contains(a.Id))
+                    .ToList();
+
                 var book = new Book
                 {
+                    Id = id,
                     Title = bookDTO.Title,
-                    Description = bookDTO.Description
+                    Description = bookDTO.Description,
+                    Authors = authors
                 };
 
                 return _bookService.Update(id, book)

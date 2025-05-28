@@ -14,5 +14,9 @@ namespace Activity2BooksAPI.Interfaces
         Book Add(Book book);
         bool Update(int id, Book book);
         bool Delete(int id);
+        List<Book> SearchByTitle(string title);
     }
 }
+
+// This interface defines the contract for book-related operations, including methods to retrieve, add, update, and delete books.
+// Could've made it Generic, but for demo purposes I made it this way.

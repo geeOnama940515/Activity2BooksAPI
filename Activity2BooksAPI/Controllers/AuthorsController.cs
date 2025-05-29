@@ -119,7 +119,7 @@ namespace Activity2BooksAPI.Controllers
             try
             {
                 return _authorService.Delete(id)
-                    ? this.CreateResponse(200,"Author Deleted.")
+                    ? this.CreateResponse(204,"Author Deleted.")
                     : this.CreateResponse(404, "Author does not exist!");
             }
             catch (Exception ex)

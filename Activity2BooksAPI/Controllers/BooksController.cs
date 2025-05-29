@@ -163,7 +163,7 @@ namespace Activity2BooksAPI.Controllers
             try
             {
                 return _bookService.Delete(id)
-                    ? this.CreateResponse(200, "Book Deleted")
+                    ? this.CreateResponse(204, "Book Deleted")
                     : this.CreateResponse(404, "Book Not Found!");
             }
             catch (Exception ex)

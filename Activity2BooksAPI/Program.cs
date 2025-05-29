@@ -1,9 +1,11 @@
+using Activity2BooksAPI;
 using Activity2BooksAPI.Interfaces;
 using Activity2BooksAPI.Services;
+using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -11,8 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 
-builder.Services.AddSingleton<IAuthorService, AuthorServiceImplementation>();
-builder.Services.AddSingleton<IBookService, BookServiceImplementation>();
+builder.Services.AddDependencyInjection(configuration);
 
 var app = builder.Build();
 

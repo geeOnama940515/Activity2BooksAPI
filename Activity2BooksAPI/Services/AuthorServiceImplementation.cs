@@ -6,42 +6,22 @@ namespace Activity2BooksAPI.Services
 {
     public class AuthorServiceImplementation : IAuthorService
     {
-        private readonly List<Author> _authors = new();
-        private int _authorId = 1;
+        private readonly AppDBContext _context;
 
-        public AuthorServiceImplementation()
+        public AuthorServiceImplementation(AppDBContext context)
         {
-            // Seed authors
-            var orwell = Add(new Author { FirstName = "George", LastName = "Orwell" });
-            orwell.Books = new List<Book>
-            {
-                new Book { Id = 1, Title = "1984", Description = "Dystopian novel" },
-                new Book { Id = 2, Title = "Animal Farm", Description = "Political allegory" }
-            };
-
-            var rowling = Add(new Author { FirstName = "J.K.", LastName = "Rowling" });
-            rowling.Books = new List<Book>
-            {
-                new Book { Id = 3, Title = "Harry Potter and the Philosopher's Stone", Description = "First Harry Potter book" }
-            };
-
-            var tolkien = Add(new Author { FirstName = "J.R.R.", LastName = "Tolkien" });
-            tolkien.Books = new List<Book>
-            {
-                new Book { Id = 4, Title = "The Hobbit", Description = "Adventure in Middle-earth" },
-                new Book { Id = 5, Title = "The Lord of the Rings", Description = "Epic fantasy" }
-            };
+            _context = context;
         }
 
-        public List<Author> GetAll() => _authors;
+        public List<Author> GetAll() => _context.Authors.ToList();
 
-        public Author? GetById(int id) => _authors.FirstOrDefault(a => a.Id == id);
+        public Author? GetById(int id) => _context.Authors.FirstOrDefault(a => a.Id == id);
 
         public Author Add(Author author)
         {
-            author.Id = _authorId++;
-            _authors.Add(author);
-            return author;
+            var add = _context.Authors.Add(author);
+            _context.SaveChanges();
+            return add.Entity;
         }
 
         public bool Update(int id, Author author)
@@ -51,18 +31,26 @@ namespace Activity2BooksAPI.Services
             existing.FirstName = author.FirstName;
             existing.LastName = author.LastName;
             existing.Books = author.Books;
+
+            _context.Authors.Update(existing);
+            _context.SaveChanges();
             return true;
         }
 
         public bool Delete(int id)
         {
             var author = GetById(id);
-            return author != null && _authors.Remove(author);
+
+            if(author == null) return false;
+
+            _context.Authors.Remove(author);
+            _context.SaveChanges();
+            return true;
         }
 
         public List<Author> SearchByName(string name)
         {
-            return _authors
+            return _context.Authors
               .Where(a => $"{a.FirstName} {a.LastName}".Contains(name, StringComparison.OrdinalIgnoreCase))
               .ToList();
         }

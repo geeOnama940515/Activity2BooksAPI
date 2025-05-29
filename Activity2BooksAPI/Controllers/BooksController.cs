@@ -1,6 +1,7 @@
 ﻿using Activity2BooksAPI.Interfaces;
 using Activity2BooksAPI.Models;
 using Activity2BooksAPI.Models.DTO;
+using Activity2BooksAPI.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Activity2BooksAPI.Controllers
@@ -19,7 +20,7 @@ namespace Activity2BooksAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<BookDetailsDTO>> GetAll()
+        public IActionResult GetAll()
         {
             try
             {
@@ -34,16 +35,16 @@ namespace Activity2BooksAPI.Controllers
                             .ToList() ?? new List<string>()
                     });
 
-                return Ok(books);
+                return this.CreateResponse(200,"Fetched Books",books);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error retrieving books: {ex.Message}");
+                return this.CreateResponse(500, $"Error retrieving books: {ex.Message}");
             }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<BookDetailsDTO> Get(int id)
+        public IActionResult Get(int id)
         {
             try
             {
@@ -60,15 +61,15 @@ namespace Activity2BooksAPI.Controllers
                             .ToList() ?? new List<string>()
                 };
 
-                return Ok(dto);
+                return this.CreateResponse(200,"Fetched book",dto);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error retrieving book: {ex.Message}");
+                return this.CreateResponse(500, $"Error retrieving book: {ex.Message}");
             }
         }
         [HttpGet("search")]
-        public ActionResult<IEnumerable<BookDetailsDTO>> SearchByTitle([FromQuery] string title)
+        public IActionResult SearchByTitle([FromQuery] string title)
         {
             try
             {
@@ -83,11 +84,11 @@ namespace Activity2BooksAPI.Controllers
                                     .ToList() ?? new List<string>()
                     });
 
-                return Ok(books);
+                return this.CreateResponse(200, "Fetched Books", books);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error searching books: {ex.Message}");
+                return this.CreateResponse(500, $"Error searching books: {ex.Message}");
             }
         }
 
@@ -118,11 +119,11 @@ namespace Activity2BooksAPI.Controllers
                     AuthorIds = created.Authors?.Select(a => a.Id).ToList() ?? new List<int>()
                 };
 
-                return CreatedAtAction(nameof(Get), new { id = created.Id }, createdDTO);
+                return this.CreateResponse(201,"Book Created.", createdDTO);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error creating book: {ex.Message}");
+                return this.CreateResponse(500, $"Error creating book: {ex.Message}");
             }
         }
 
@@ -144,12 +145,12 @@ namespace Activity2BooksAPI.Controllers
                 };
 
                 return _bookService.Update(id, book)
-                    ? Ok("Book Updated!")
-                    : NotFound("Book Not Found!");
+                    ? this.CreateResponse(200,"Book Updated!")
+                    : this.CreateResponse(404,"Book Not Found!");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error updating book: {ex.Message}");
+                return this.CreateResponse(500, $"Error updating book: {ex.Message}");
             }
         }
 
@@ -159,12 +160,12 @@ namespace Activity2BooksAPI.Controllers
             try
             {
                 return _bookService.Delete(id)
-                    ? Ok("Book Deleted")
-                    : NotFound("Book Not Found!");
+                    ? this.CreateResponse(200,"Book Deleted")
+                    : this.CreateResponse(404,"Book Not Found!");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error deleting book: {ex.Message}");
+                return this.CreateResponse(500, $"Error deleting book: {ex.Message}");
             }
         }
     }

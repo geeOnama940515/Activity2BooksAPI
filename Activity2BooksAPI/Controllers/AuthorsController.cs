@@ -2,6 +2,7 @@
 using Activity2BooksAPI.Models.DTO;
 using Activity2BooksAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Activity2BooksAPI.Services.Helpers;
 
 namespace Activity2BooksAPI.Controllers
 {
@@ -17,7 +18,7 @@ namespace Activity2BooksAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AuthorDTO>> GetAll()
+        public  IActionResult GetAll()
         {
             try
             {
@@ -29,16 +30,16 @@ namespace Activity2BooksAPI.Controllers
                         LastName = a.LastName
                     });
 
-                return Ok(authors);
+                return this.CreateResponse(200,"Fetched Authors",authors);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error retrieving authors: {ex.Message}");
+                return this.CreateResponse(500, $"Error retrieving authors: {ex.Message}");
             }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<AuthorDTO> Get(int id)
+        public IActionResult Get(int id)
         {
             try
             {
@@ -52,11 +53,11 @@ namespace Activity2BooksAPI.Controllers
                     LastName = author.LastName
                 };
 
-                return Ok(dto);
+                return this.CreateResponse(200, "Fetched Author", dto);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error retrieving author: {ex.Message}");
+                return this.CreateResponse(500, $"Error retrieving author: {ex.Message}");
             }
         }
 
@@ -65,6 +66,12 @@ namespace Activity2BooksAPI.Controllers
         {
             try
             {
+                var isExisting = _authorService.SearchByName($"{authorDto.FirstName} {authorDto.LastName}");
+                if (isExisting.Any())
+                {
+                    return this.CreateResponse(409,"Author with the same name already exists.");
+                }
+
                 var author = new Author
                 {
                     FirstName = authorDto.FirstName,
@@ -72,11 +79,11 @@ namespace Activity2BooksAPI.Controllers
                 };
 
                 var added = _authorService.Add(author);
-                return CreatedAtAction(nameof(Get), new { id = added.Id }, authorDto);
+                return this.CreateResponse(201,"Author Created.", authorDto);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error creating author: {ex.Message}");
+                return this.CreateResponse(500, $"Error creating author: {ex.Message}");
             }
         }
 
@@ -85,6 +92,9 @@ namespace Activity2BooksAPI.Controllers
         {
             try
             {
+                var isExisting = _authorService.GetById(id);
+                if (isExisting == null) return this.CreateResponse(404,"Author does not exist!");
+
                 var author = new Author
                 {
                     FirstName = authorDto.FirstName,
@@ -92,12 +102,12 @@ namespace Activity2BooksAPI.Controllers
                 };
 
                 return _authorService.Update(id, author)
-                    ? Ok("Author Updated")
-                    : NotFound("Author does not exist!");
+                    ? this.CreateResponse(200,"Author Updated")
+                    : this.CreateResponse(404,"Author does not exist!");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error updating author: {ex.Message}");
+                return this.CreateResponse(500, $"Error updating author: {ex.Message}");
             }
         }
 
@@ -107,17 +117,17 @@ namespace Activity2BooksAPI.Controllers
             try
             {
                 return _authorService.Delete(id)
-                    ? Ok("Deleted")
-                    : NotFound("Author does not exist!");
+                    ? this.CreateResponse(200,"Author Deleted.")
+                    : this.CreateResponse(404, "Author does not exist!");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error deleting author: {ex.Message}");
+                return this.CreateResponse(500, $"Error deleting author: {ex.Message}");
             }
         }
 
         [HttpGet("search")]
-        public ActionResult<IEnumerable<AuthorDTO>> SearchByName([FromQuery] string name)
+        public IActionResult SearchByName([FromQuery] string name)
         {
             try
             {
@@ -129,23 +139,23 @@ namespace Activity2BooksAPI.Controllers
                         LastName = a.LastName
                     });
 
-                return Ok(authors);
+                return this.CreateResponse(200,"Author fethced",authors);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error searching authors: {ex.Message}");
+                return this.CreateResponse(500, $"Error searching authors: {ex.Message}");
             }
         }
 
         [HttpGet("{id}/books")]
-        public ActionResult<IEnumerable<BookDTO>> GetBooksByAuthorId(int id)
+        public IActionResult GetBooksByAuthorId(int id)
         {
             try
             {
                 var books = _authorService.GetBooksByAuthorId(id);
 
                 if (books == null || books.Count == 0)
-                    return NotFound("No books found for this author.");
+                    return this.CreateResponse(404,"No books found for this author.");
 
                 var bookDtos = books.Select(b => new BookDTO
                 {
@@ -154,11 +164,11 @@ namespace Activity2BooksAPI.Controllers
                     Description = b.Description
                 });
 
-                return Ok(bookDtos);
+                return this.CreateResponse(200,"Fetched books by author",bookDtos);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error retrieving books: {ex.Message}");
+                return this.CreateResponse(500, $"Error retrieving books: {ex.Message}");
             }
         }
     }

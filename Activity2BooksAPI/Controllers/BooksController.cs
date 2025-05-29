@@ -172,6 +172,8 @@ namespace Activity2BooksAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
+
         [HttpGet("with-pagination")]
         public async Task<IActionResult> GetPaginated([FromQuery] string? query, [FromQuery] int page, [FromQuery] int pageSize)
         {

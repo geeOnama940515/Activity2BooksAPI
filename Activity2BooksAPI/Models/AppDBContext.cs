@@ -62,28 +62,49 @@ public class AppDBContext : IdentityDbContext<ApplicationUser>
         );
 
         // Seed ApplicationUser
+        // Seed ApplicationUser with static password hashes
         modelBuilder.Entity<IdentityRole>().HasData(
-                       new IdentityRole { Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "Administrator", NormalizedName = "ADMINISTRATOR".ToUpper() },
-                       new IdentityRole { Id = "25ab6d7e-585f-469e-902b-f60008bdfb03", Name = "Developer", NormalizedName = "DEVELOPER".ToUpper() }
-                    );
-        PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
+            new IdentityRole
+            {
+                Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                Name = "Administrator",
+                NormalizedName = "ADMINISTRATOR"
+            },
+            new IdentityRole
+            {
+                Id = "25ab6d7e-585f-469e-902b-f60008bdfb03",
+                Name = "Developer",
+                NormalizedName = "DEVELOPER"
+            }
+        );
+
         modelBuilder.Entity<ApplicationUser>().HasData(
             new ApplicationUser
             {
                 Id = "25ab6d7e-e25d-446f-86af-df82d884e7b7",
                 UserName = "admin",
-                PasswordHash = passwordHasher.HashPassword(null, "p@$$W0rd@123"),
-                NormalizedUserName = "Admin"
-
+                NormalizedUserName = "ADMIN",
+                Email = "admin@example.com", // Add email if required
+                NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                EmailConfirmed = true,
+                // Pre-computed hash for "p@$$W0rd@123"
+                PasswordHash = "AQAAAAIAAYagAAAAELJ7ZPea3kZcbr8uKykT7uqICP3KVwUsn8AErvMGc5nr75Dw7p2IhPLXMl6sjgslOQ==",
+                SecurityStamp = "372f5d7e-8eec-46ec-9670-32bc12f61de6",
+                ConcurrencyStamp = "8d8808e-51be-4060-a50a-7c79c4e02586"
             },
-             new ApplicationUser
-             {
-                 Id = "9911b550-3b0e-4889-902b-483d56fd7210",
-                 UserName = "developer",
-                 PasswordHash = passwordHasher.HashPassword(null, "devp@$$W0rd@123"),
-                 NormalizedUserName = "developer"
-
-             }
+            new ApplicationUser
+            {
+                Id = "9911b550-3b0e-4889-902b-483d56fd7210",
+                UserName = "developer",
+                NormalizedUserName = "DEVELOPER",
+                Email = "developer@example.com", // Add email if required
+                NormalizedEmail = "DEVELOPER@EXAMPLE.COM",
+                EmailConfirmed = true,
+                // Pre-computed hash for "devp@$$W0rd@123"
+                PasswordHash = "AQAAAAIAAYagAAAAECRSL36zEJUqgeYOMa2wiN1NIePclV18upLXF4sbSo+lqFFKhd+Wfb/bnwJLqbSUZg==",
+                SecurityStamp = "372f5d7e-8eec-46ec-9670-32bc12f61de6",
+                ConcurrencyStamp = "8d8808e-51be-4060-a50a-7c79c4e02586"
+            }
         );
 
         modelBuilder.Entity<IdentityUserRole<string>>().HasData(
@@ -94,8 +115,8 @@ public class AppDBContext : IdentityDbContext<ApplicationUser>
             },
             new IdentityUserRole<string>()
             {
-                RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                UserId = "25ab6d7e-3b0e-e25d-86af-483d56fd7210"
+                RoleId = "25ab6d7e-585f-469e-902b-f60008bdfb03", // Fixed: Developer role ID
+                UserId = "9911b550-3b0e-4889-902b-483d56fd7210"
             }
         );
     }

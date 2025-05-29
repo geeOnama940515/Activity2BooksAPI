@@ -1,5 +1,6 @@
 ﻿using Activity2BooksAPI.Interfaces;
 using Activity2BooksAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 
 namespace Activity2BooksAPI.Services
@@ -15,7 +16,12 @@ namespace Activity2BooksAPI.Services
 
         public List<Author> GetAll() => _context.Authors.ToList();
 
-        public Author? GetById(int id) => _context.Authors.FirstOrDefault(a => a.Id == id);
+        public Author? GetById(int id)
+        {
+            return _context.Authors
+                .Include(a => a.Books)
+                .FirstOrDefault(a => a.Id == id);
+        }
 
         public Author Add(Author author)
         {
@@ -51,13 +57,16 @@ namespace Activity2BooksAPI.Services
         public List<Author> SearchByName(string name)
         {
             return _context.Authors
-              .Where(a => $"{a.FirstName} {a.LastName}".Contains(name, StringComparison.OrdinalIgnoreCase))
-              .ToList();
+                .AsEnumerable() // moves the query into memory
+                .Where(a => $"{a.FirstName} {a.LastName}"
+                    .Contains(name, StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
 
         public List<Book> GetBooksByAuthorId(int authorId)
         {
             var author = GetById(authorId);
+            if(author == null) return new List<Book>();
 
             return author?.Books ?? new List<Book>();
         }

@@ -3,11 +3,13 @@ using Activity2BooksAPI.Models.DTO;
 using Activity2BooksAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Activity2BooksAPI.Services.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Activity2BooksAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AuthorsController : ControllerBase
     {
         private readonly IAuthorService _authorService;

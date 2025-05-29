@@ -1,5 +1,6 @@
 using Activity2BooksAPI;
 using Activity2BooksAPI.Interfaces;
+using Activity2BooksAPI.Models.Identity;
 using Activity2BooksAPI.Services;
 using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
@@ -27,5 +28,5 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapGroup("/api/accounts").MapIdentityApi<ApplicationUser>().WithTags("Accounts");
 app.Run();

@@ -10,11 +10,11 @@ namespace Activity2BooksAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class authorsController : ControllerBase
+    public class AuthorsController : ControllerBase
     {
         private readonly IAuthorService _authorService;
 
-        public authorsController(IAuthorService authorService)
+        public AuthorsController(IAuthorService authorService)
         {
             _authorService = authorService;
         }

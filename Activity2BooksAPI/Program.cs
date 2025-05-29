@@ -16,6 +16,13 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDependencyInjection(configuration);
 
+
+//lower-case endpoints
+
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

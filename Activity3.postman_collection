@@ -477,6 +477,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Paginated",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Books/with-pagination",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Books",
+								"with-pagination"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -487,14 +509,7 @@
 					"name": "Login",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "CfDJ8BkEXFWbWaREoyK0X1tBGSBFio_qC3T3Zf919xMLqCjMmxlk6DpNU6LWWbZBvgIQl-bmUU0ecaB9-8TRb5smjmt61CoK-KVH6mwPodffXh7vPez-ivXDxWIo4wP2DalG3dgo8nvVI7ulI2bOffuY_c5I1LWg0rAha5UEqTo-ylhwUXgRWNVoimpl4Rri4nF732evH7Q8ticKZlHj3njyKOMGqrLmuTtglnIfqggzpK8WucA0k-Lpd0DATtgRVZK6BRmXw0WBrcEpTxdNxyL4N27XFawpaX42NhGS1nO-LdLjdCK3SQhgOoOVuLLX5Su4T81XntOoNLTkx2Ad3eBBJYAkhzEO5wpz4LFl8Oig0qF8_nO3sIiVeRCiyT_0UzVzU6NtC7vDmcUptDiJ0f5NdOmuA4nC5v_Wa6qCSyJtlh9ENv4WXBQogry6Td_XHlIQ0GtYpIqwfXnJiZ8pYI81KBa5jhAlpzvlx7Y91sWgfi33RbWQtkZ-Jl-0p_RnvAgTobckQbiB9o9IVOVD-HG2a2eq1zUZdDl2pZRzza4m86EcXIDkm7KSKIZI7DYnrZqYXzyrV3oV-0xj7XBaIytcXJ0j4X3pQvQvasCwiHGIVQLKG6trwJpys1bz-ePdAUTwiUtVpPVUT75ZHQRcQQ-j2nvqBRlOCxUKZosDboRdvk8-yXiTJWSBxT-2rtSsbk18i3qi2ZWM3Fci8oc_O1OOV6AVvtWiBc1gh6iCc7o4Ly7tebfocTSEtC4f7Bn_NrJnr1dCuK51evW3FlQmS_-jpAq8nmbIkCPBYvSioJ60UAj5",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],

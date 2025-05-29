@@ -24,6 +24,7 @@ namespace Activity2BooksAPI
 
             //Authentication and Authorization
             services.AddIdentityApiEndpoints<ApplicationUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDBContext>();
 
             services.Configure<IdentityOptions>(options =>

@@ -2,12 +2,14 @@
 using Activity2BooksAPI.Models;
 using Activity2BooksAPI.Models.DTO;
 using Activity2BooksAPI.Services.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Activity2BooksAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Developer")]
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;

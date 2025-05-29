@@ -7,16 +7,14 @@ namespace Activity2BooksAPI.Services
     public class BookServiceImplementation : IBookService
     {
         private readonly AppDBContext _context;
-        private readonly IAuthorService _authorService;
 
-        public BookServiceImplementation(AppDBContext context,IAuthorService authorService)
+        public BookServiceImplementation(AppDBContext context)
         {
             _context = context;
-            _authorService = authorService;
 
         }
 
-        public List<Book> GetAll() => _context.Books.ToList();
+        public List<Book> GetAll() => _context.Books.Include(a => a.Authors).ToList();
 
         public Book? GetById(int id) => _context.Books.AsEnumerable().FirstOrDefault(b => b.Id == id);
 

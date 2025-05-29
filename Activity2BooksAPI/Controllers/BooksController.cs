@@ -4,6 +4,7 @@ using Activity2BooksAPI.Models.DTO;
 using Activity2BooksAPI.Services.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 
 namespace Activity2BooksAPI.Controllers
 {
@@ -37,7 +38,7 @@ namespace Activity2BooksAPI.Controllers
                             .ToList() ?? new List<string>()
                     });
 
-                return this.CreateResponse(200,"Fetched Books",books);
+                return this.CreateResponse(200, "Fetched Books", books);
             }
             catch (Exception ex)
             {
@@ -63,7 +64,7 @@ namespace Activity2BooksAPI.Controllers
                             .ToList() ?? new List<string>()
                 };
 
-                return this.CreateResponse(200,"Fetched book",dto);
+                return this.CreateResponse(200, "Fetched book", dto);
             }
             catch (Exception ex)
             {
@@ -121,7 +122,7 @@ namespace Activity2BooksAPI.Controllers
                     AuthorIds = created.Authors?.Select(a => a.Id).ToList() ?? new List<int>()
                 };
 
-                return this.CreateResponse(201,"Book Created.", createdDTO);
+                return this.CreateResponse(201, "Book Created.", createdDTO);
             }
             catch (Exception ex)
             {
@@ -147,8 +148,8 @@ namespace Activity2BooksAPI.Controllers
                 };
 
                 return _bookService.Update(id, book)
-                    ? this.CreateResponse(200,"Book Updated!")
-                    : this.CreateResponse(404,"Book Not Found!");
+                    ? this.CreateResponse(200, "Book Updated!")
+                    : this.CreateResponse(404, "Book Not Found!");
             }
             catch (Exception ex)
             {
@@ -162,13 +163,43 @@ namespace Activity2BooksAPI.Controllers
             try
             {
                 return _bookService.Delete(id)
-                    ? this.CreateResponse(200,"Book Deleted")
-                    : this.CreateResponse(404,"Book Not Found!");
+                    ? this.CreateResponse(200, "Book Deleted")
+                    : this.CreateResponse(404, "Book Not Found!");
             }
             catch (Exception ex)
             {
                 return this.CreateResponse(500, $"Error deleting book: {ex.Message}");
             }
+        }
+
+        [HttpGet("with-pagination")]
+        public async Task<IActionResult> GetPaginated([FromQuery] string? query, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var books = _bookService.GetAll();
+
+            var bookQueryable = books.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                bookQueryable = bookQueryable.Where(p =>
+                    p.Title.ToLower().Contains(query.ToLower())
+                );
+            }
+
+            // Project to DTO before pagination (better performance and avoid cycles)
+            var bookDtoQueryable = bookQueryable.Select(book => new BookDetailsDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Description = book.Description,
+                AuthorNames = (book.Authors ?? Enumerable.Empty<Author>())
+                        .Select(a => a.FirstName + " " + a.LastName)
+                        .ToList()
+            });
+
+            var result = await bookDtoQueryable.GetPaginatedResults(page: page, pageSize: pageSize);
+
+            return this.CreateResponse(200, "Retrieved Books", result);
         }
     }
 }
